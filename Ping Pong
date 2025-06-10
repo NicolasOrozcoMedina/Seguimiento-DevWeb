@@ -10,12 +10,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f0f0f0;
+            background-color: white;
             padding: 20px;
         }
         
         h1 {
-            color: #333;
+            color: black;
             margin-bottom: 30px;
         }
         
@@ -38,7 +38,7 @@
         
         .player h2 {
             margin-top: 0;
-            color: #444;
+            color: black;
         }
         
         .score {
@@ -60,34 +60,34 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #4CAF50;
+            background-color: Green;
             color: white;
             transition: background-color 0.3s;
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: darkgreen;
         }
         
         button:disabled {
-            background-color: #cccccc;
+            background-color: white;
             cursor: not-allowed;
         }
         
         .reset-btn {
-            background-color: #f44336;
+            background-color: red;
         }
         
         .reset-btn:hover {
-            background-color: #d32f2f;
+            background-color: darkred;
         }
         
         .options-btn {
-            background-color: #2196F3;
+            background-color: blue;
         }
         
         .options-btn:hover {
-            background-color: #0b7dda;
+            background-color: darkblue;
         }
         
         .options-container {
@@ -100,23 +100,23 @@
         
         .winning-score-btn {
             padding: 8px 15px;
-            background-color: #9E9E9E;
+            background-color: gray;
         }
         
         .winning-score-btn:hover {
-            background-color: #757575;
+            background-color: darkgray;
         }
         
         .winning-score-btn.selected {
-            background-color: #2196F3;
+            background-color: blue;
         }
         
         .winner {
-            color: #4CAF50;
+            color: green;
         }
         
         .loser {
-            color: #f44336;
+            color: red;
         }
     </style>
 </head>
@@ -144,7 +144,6 @@
     
     <div class="options-container" id="optionsContainer">
         <p>Puntos para ganar:</p>
-        <!-- Los botones se generarán con JavaScript -->
     </div>
     
     <script>
@@ -166,8 +165,8 @@
             let winningScore = 11;
             let gameOver = false;
             
-            // Generar botones de opciones de puntuación
-            const scoreOptions = [3, 5, 7, 9, 11];
+            // Generar botones de opciones de puntuacion
+            const scoreOptions = [3, 4,  5, 6, 7, 8, 9, 10, 11];
             const optionsContainerEl = document.getElementById('optionsContainer');
             
             scoreOptions.forEach(option => {
@@ -213,22 +212,19 @@
             
             function checkWinner() {
                 if (score1 >= winningScore || score2 >= winningScore) {
-                    // Verificar diferencia de al menos 2 puntos
-                    if (Math.abs(score1 - score2) >= 2) {
-                        gameOver = true;
+                    gameOver = true;
                         
-                        // Deshabilitar botones de puntuación
-                        btn1.disabled = true;
-                        btn2.disabled = true;
-                        
-                        // Resaltar ganador y perdedor
-                        if (score1 > score2) {
-                            score1El.classList.add('winner');
-                            score2El.classList.add('loser');
-                        } else {
-                            score2El.classList.add('winner');
-                            score1El.classList.add('loser');
-                        }
+                    // Deshabilitar botones de puntuacion
+                    btn1.disabled = true;
+                    btn2.disabled = true;
+                    
+                    // Resaltar ganador y perdedor
+                    if (score1 > score2) {
+                        score1El.classList.add('winner');
+                        score2El.classList.add('loser');
+                    } else {
+                        score2El.classList.add('winner');
+                        score1El.classList.add('loser');
                     }
                 }
             }
@@ -240,7 +236,7 @@
                 score2El.textContent = '0';
                 gameOver = false;
                 
-                // Habilitar botones de puntuación
+                // Habilitar botones de puntuacion
                 btn1.disabled = false;
                 btn2.disabled = false;
                 
@@ -257,7 +253,7 @@
                 winningScore = score;
                 resetGame();
                 
-                // Actualizar botón seleccionado
+                // Actualizar boton seleccionado
                 document.querySelectorAll('.winning-score-btn').forEach(btn => {
                     btn.classList.remove('selected');
                     if (parseInt(btn.textContent) === score) {
