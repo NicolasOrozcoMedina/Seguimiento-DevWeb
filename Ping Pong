@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Score Keeper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .score-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+        
+        .player {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 45%;
+        }
+        
+        .player h2 {
+            margin-top: 0;
+            color: #444;
+        }
+        
+        .score {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .reset-btn {
+            background-color: #f44336;
+        }
+        
+        .reset-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .options-btn {
+            background-color: #2196F3;
+        }
+        
+        .options-btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        .options-container {
+            margin-top: 20px;
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .winning-score-btn {
+            padding: 8px 15px;
+            background-color: #9E9E9E;
+        }
+        
+        .winning-score-btn:hover {
+            background-color: #757575;
+        }
+        
+        .winning-score-btn.selected {
+            background-color: #2196F3;
+        }
+        
+        .winner {
+            color: #4CAF50;
+        }
+        
+        .loser {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ping Pong Score Keeper</h1>
+    
+    <div class="score-container">
+        <div class="player" id="player1">
+            <h2>Jugador 1</h2>
+            <div class="score" id="score1">0</div>
+            <button class="score-btn" id="btn1">+1 Punto</button>
+        </div>
+        
+        <div class="player" id="player2">
+            <h2>Jugador 2</h2>
+            <div class="score" id="score2">0</div>
+            <button class="score-btn" id="btn2">+1 Punto</button>
+        </div>
+    </div>
+    
+    <div class="buttons">
+        <button class="reset-btn" id="resetBtn">Reiniciar Juego</button>
+        <button class="options-btn" id="optionsBtn">Opciones</button>
+    </div>
+    
+    <div class="options-container" id="optionsContainer">
+        <p>Puntos para ganar:</p>
+        <!-- Los botones se generarán con JavaScript -->
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const score1El = document.getElementById('score1');
+            const score2El = document.getElementById('score2');
+            const btn1 = document.getElementById('btn1');
+            const btn2 = document.getElementById('btn2');
+            const resetBtn = document.getElementById('resetBtn');
+            const optionsBtn = document.getElementById('optionsBtn');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const player1El = document.getElementById('player1');
+            const player2El = document.getElementById('player2');
+            
+            // Variables del juego
+            let score1 = 0;
+            let score2 = 0;
+            let winningScore = 11;
+            let gameOver = false;
+            
+            // Generar botones de opciones de puntuación
+            const scoreOptions = [3, 5, 7, 9, 11];
+            const optionsContainerEl = document.getElementById('optionsContainer');
+            
+            scoreOptions.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'winning-score-btn';
+                if (option === winningScore) {
+                    btn.classList.add('selected');
+                }
+                btn.textContent = option;
+                btn.addEventListener('click', () => {
+                    setWinningScore(option);
+                });
+                optionsContainerEl.appendChild(btn);
+            });
+            
+            // Event listeners
+            btn1.addEventListener('click', () => {
+                updateScore(1);
+            });
+            
+            btn2.addEventListener('click', () => {
+                updateScore(2);
+            });
+            
+            resetBtn.addEventListener('click', resetGame);
+            
+            optionsBtn.addEventListener('click', toggleOptions);
+            
+            // Funciones
+            function updateScore(player) {
+                if (gameOver) return;
+                
+                if (player === 1) {
+                    score1++;
+                    score1El.textContent = score1;
+                } else {
+                    score2++;
+                    score2El.textContent = score2;
+                }
+                
+                checkWinner();
+            }
+            
+            function checkWinner() {
+                if (score1 >= winningScore || score2 >= winningScore) {
+                    // Verificar diferencia de al menos 2 puntos
+                    if (Math.abs(score1 - score2) >= 2) {
+                        gameOver = true;
+                        
+                        // Deshabilitar botones de puntuación
+                        btn1.disabled = true;
+                        btn2.disabled = true;
+                        
+                        // Resaltar ganador y perdedor
+                        if (score1 > score2) {
+                            score1El.classList.add('winner');
+                            score2El.classList.add('loser');
+                        } else {
+                            score2El.classList.add('winner');
+                            score1El.classList.add('loser');
+                        }
+                    }
+                }
+            }
+            
+            function resetGame() {
+                score1 = 0;
+                score2 = 0;
+                score1El.textContent = '0';
+                score2El.textContent = '0';
+                gameOver = false;
+                
+                // Habilitar botones de puntuación
+                btn1.disabled = false;
+                btn2.disabled = false;
+                
+                // Quitar clases de color
+                score1El.classList.remove('winner', 'loser');
+                score2El.classList.remove('winner', 'loser');
+            }
+            
+            function toggleOptions() {
+                optionsContainer.style.display = optionsContainer.style.display === 'flex' ? 'none' : 'flex';
+            }
+            
+            function setWinningScore(score) {
+                winningScore = score;
+                resetGame();
+                
+                // Actualizar botón seleccionado
+                document.querySelectorAll('.winning-score-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                    if (parseInt(btn.textContent) === score) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
