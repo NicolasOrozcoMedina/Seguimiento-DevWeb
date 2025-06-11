@@ -13,15 +13,16 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #ffebee;
+            background-color: lightpink;
             text-align: center;
-            transition: background-color 0.5s;
+            position: relative;
+            overflow: hidden;
         }
         
         .message {
             font-size: 2.5rem;
             margin-bottom: 2rem;
-            color: #d81b60;
+            color: red;
         }
         
         .buttons-container {
@@ -37,31 +38,23 @@
             border-radius: 20px;
             cursor: pointer;
             position: absolute;
-            transition: transform 0.2s;
         }
         
         #no-btn {
-            background-color: #f44336;
+            background-color: red;
             color: white;
         }
         
         #si-btn {
-            background-color: #4CAF50;
+            background-color: green;
             color: white;
             display: none;
         }
         
         .final-message {
             font-size: 3rem;
-            color: #d81b60;
+            color: red;
             display: none;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -69,11 +62,12 @@
     <div class="message" id="question">¿Quieres ser mi amorcito?</div>
     
     <div class="buttons-container">
-        <button id="no-btn">No</button>
-        <button id="si-btn">Sí</button>
+        <button id="si-btn">Si</button>
     </div>
     
-    <div class="final-message" id="final-message">TE AMO MIBIDA ❤️</div>
+    <button id="no-btn">No</button>
+    
+    <div class="final-message" id="final-message">TE AMO MIBIDA</div>
     
     <script>
         const noBtn = document.getElementById('no-btn');
@@ -82,50 +76,48 @@
         const finalMessage = document.getElementById('final-message');
         const buttonsContainer = document.querySelector('.buttons-container');
         
-        // Función para mover el botón "No" a una posición aleatoria
+        // Funcion para mover el boton "No" a una posicion aleatoria
         function moveNoButton() {
-            const containerWidth = buttonsContainer.offsetWidth;
-            const containerHeight = buttonsContainer.offsetHeight;
             const buttonWidth = noBtn.offsetWidth;
             const buttonHeight = noBtn.offsetHeight;
             
-            // Calcular posición aleatoria dentro del contenedor
-            const maxX = containerWidth - buttonWidth;
-            const maxY = containerHeight - buttonHeight;
+            // Calcular posicion aleatoria dentro del contenedor
+            const maxX = window.innerWidth - buttonWidth;
+            const maxY = window.innerHeight - buttonHeight;
             
             const randomX = Math.floor(Math.random() * maxX);
             const randomY = Math.floor(Math.random() * maxY);
             
             noBtn.style.left = `${randomX}px`;
             noBtn.style.top = `${randomY}px`;
-        }
-        
-        // Evento para el botón "No"
-        noBtn.addEventListener('mouseover', function() {
-            moveNoButton();
             
-            // Mostrar el botón "Sí" en la posición original
+            // Mostrar el boton "Si" en la posicion original
             siBtn.style.display = 'block';
             siBtn.style.left = '50%';
             siBtn.style.top = '50%';
             siBtn.style.transform = 'translate(-50%, -50%)';
+        }
+        
+        // Evento para el boton "No"
+        noBtn.addEventListener('click', function() {
+            moveNoButton();
         });
         
-        // Evento para el botón "Sí"
+        // Evento para el boton "Si"
         siBtn.addEventListener('click', function() {
-            // Ocultar todo y mostrar el mensaje final
             question.style.display = 'none';
             buttonsContainer.style.display = 'none';
+            noBtn.style.display = 'none';
             finalMessage.style.display = 'block';
             
-            // Cambiar el fondo a un color romántico
-            document.body.style.backgroundColor = '#fce4ec';
         });
         
-        // Posicionar el botón "No" inicialmente en el centro
+        // Posicionar el boton "No" inicialmente en el centro
         noBtn.style.left = '50%';
         noBtn.style.top = '50%';
         noBtn.style.transform = 'translate(-50%, -50%)';
     </script>
 </body>
 </html>
+
+
