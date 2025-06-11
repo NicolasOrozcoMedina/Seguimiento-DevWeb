@@ -77,78 +77,85 @@ const shuffleArray = (array) => {
 
 // Generar matriz del juego
 const matrixGenerator = (cardValues, size = 4) => {
-    gameContainer.innerHTML = "";
-    cardValues = [...cardValues, ...cardValues];
-    cardValues = shuffleArray(cardValues);
-    
-    for (let i = 0; i < size * size; i++) {
-        gameContainer.innerHTML += `
-            <div class="card-container" data-card-value="${cardValues[i].name}">
-                <div class="card-before">?</div>
-                <div class="card-after">
-                    <img src="${cardValues[i].image}" class="image"/>
-                </div>
-            </div>
-        `;
-    }
-    
-    gameContainer.style.gridTemplateColumns = `repeat(${size},auto)`;
-    cards = document.querySelectorAll(".card-container");
-    cards.forEach(card => card.addEventListener("click", flipCard));
+  gameContainer.innerHTML = "";
+  cardValues = [...cardValues, ...cardValues];
+  cardValues = shuffleArray(cardValues);
+  
+  for (let i = 0; i < size * size; i++) {
+    gameContainer.innerHTML += `
+      <div class="card-container" data-card-value="${cardValues[i].name}">
+        <div class="card-before">?</div>
+        <div class="card-after">
+          <img src="${cardValues[i].image}" class="image"/>
+        </div>
+      </div>
+    `;
+  }
+
+  gameContainer.style.gridTemplateColumns = `repeat(${size},auto)`;
+  cards = document.querySelectorAll(".card-container");
+  cards.forEach(card => card.addEventListener("click", flipCard));
 };
 
-// Voltear carta
-const flipCard = () => {
-    if (lockBoard || this === firstCard || this.classList.contains("matched")) return;
-    
-    this.classList.add("flipped");
-    
-    if (!firstCard) {
-        firstCard = this;
-        return;
-    }
-    
-    secondCard = this;
-    lockBoard = true;
-    movesCounter();
-    checkForMatch();
+// Función para voltear carta
+const flipCard = function() {
+  // No hacer nada si la carta ya está volteada, emparejada o el tablero está bloqueado
+  if (this.classList.contains("flipped") || 
+      this.classList.contains("matched") || 
+      lockBoard) {
+    return;
+  }
+
+  // Voltear la carta
+  this.classList.add("flipped");
+
+  // Si no hay primera carta seleccionada
+  if (!firstCard) {
+    firstCard = this;
+    return;
+  }
+
+  // Si ya hay una carta seleccionada
+  secondCard = this;
+  movesCounter();
+  lockBoard = true;
+
+  // Comprobar si coinciden
+  if (firstCard.dataset.cardValue === secondCard.dataset.cardValue) {
+    disableCards();
+  } else {
+    unflipCards();
+  }
 };
 
-// Verificar coincidencia
-const checkForMatch = () => {
-    const isMatch = firstCard.dataset.cardValue === secondCard.dataset.cardValue;
-    
-    if (isMatch) {
-        disableCards();
-        winCount++;
-        if (winCount === (cards.length / 2)) {
-            stopGame();
-            result.innerHTML = `<h2>Ganaste SIIIUUUU</h2><h4>Pasos: ${movesCount}</h4><h4>Tiempo: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}</h4>`;
-        }
-    } else {
-        unflipCards();
-    }
-};
-
-// Deshabilitar cartas coincidentes
+// Función para deshabilitar cartas coincidentes
 const disableCards = () => {
-    firstCard.classList.add("matched");
-    secondCard.classList.add("matched");
-    resetBoard();
+  firstCard.classList.add("matched");
+  secondCard.classList.add("matched");
+  
+  // Verificar si el juego ha terminado
+  winCount++;
+  if (winCount === cards.length / 2) {
+    stopGame();
+    result.innerHTML = `<h2>Ganaste SIIIUUUU</h2><h4>Pasos: ${movesCount}</h4>`;
+  }
+  
+  resetBoard();
 };
 
-// Voltear cartas no coincidentes
+// Función para voltear cartas no coincidentes
 const unflipCards = () => {
-    setTimeout(() => {
-        firstCard.classList.remove("flipped");
-        secondCard.classList.remove("flipped");
-        resetBoard();
-    }, 1000);
+  setTimeout(() => {
+    firstCard.classList.remove("flipped");
+    secondCard.classList.remove("flipped");
+    resetBoard();
+  }, 1000);
 };
 
-// Reiniciar tablero
+// Función para reiniciar el tablero
 const resetBoard = () => {
-    [firstCard, secondCard, lockBoard] = [null, null, false];
+  [firstCard, secondCard] = [null, null];
+  lockBoard = false;
 };
 
 // Iniciar juego

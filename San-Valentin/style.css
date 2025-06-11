@@ -5,25 +5,37 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ffebee;
+    background-color: white;
+    overflow: hidden;
 }
 
 .container {
     text-align: center;
+    position: relative;
+    width: 100%;
+    padding: 20px;
 }
 
 #message {
-    font-size: 24px;
+    font-size: 34px;
     text-align: center;
-    margin-bottom: 30px;
-    color: #d81b60;
+    margin-bottom: 50px;
+    color: red;
+    z-index: 10;
+    position: relative;
+    top: -30px; 
 }
 
 #buttons {
-    position: relative;
-    height: 50px;
-    width: 200px;
-    margin: 0 auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
 }
 
 .button {
@@ -34,19 +46,22 @@ body {
     font-size: 18px;
     padding: 10px 20px;
     cursor: pointer;
-    transition: all 0.3s;
+    position: absolute;
 }
 
 .no {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f44336;
+    background-color: red;
     color: white;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .yes {
-    display: none;
-    background-color: #4CAF50;
+    background-color: green;
     color: white;
+    display: none;
+    position: static;
+    margin-top: 20px;
 }
