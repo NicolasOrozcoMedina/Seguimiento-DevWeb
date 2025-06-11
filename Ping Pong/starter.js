@@ -44,24 +44,18 @@ function updateScores() {
 
 function checkWinner() {
     if (p1Score >= winningScore || p2Score >= winningScore) {
-        // Verificar diferencia de al menos 2 puntos
-        if (Math.abs(p1Score - p2Score) >= 2) {
-            gameOver = true;
-            
-            // Cambiar colores de los marcadores
-            if (p1Score > p2Score) {
+        if (p1Score > p2Score) {
                 p1Display.classList.add('has-text-success');
                 p2Display.classList.add('has-text-danger');
-            } else {
+        } else {
                 p2Display.classList.add('has-text-success');
                 p1Display.classList.add('has-text-danger');
-            }
-            
-            // Deshabilitar botones
-            p1Button.disabled = true;
-            p2Button.disabled = true;
         }
-    }
+            
+        // Deshabilitar botones
+        p1Button.disabled = true;
+        p2Button.disabled = true;
+        }
 }
 
 function resetGame() {
